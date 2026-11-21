@@ -57,6 +57,8 @@
             <div class="step-actions">
               @if (photo(s)) {
                 <button type="button" class="pill" (click)="flip($index)">📷 Foto</button>
+              } @else if (s.place) {
+                <a class="pill" [href]="googlePhotos(s.place)" target="_blank" rel="noopener">📷 Fotos ↗</a>
               }
               @if (s.ticket) {
                 <button
@@ -94,6 +96,7 @@
                   }
                 </span>
               </figcaption>
+              <a class="more-photos" [href]="googlePhotos(s.place!)" target="_blank" rel="noopener">Más fotos en Google ↗</a>
               <button type="button" class="flip-back" (click)="flip($index)" aria-label="Volver al texto">↺</button>
             </figure>
           }

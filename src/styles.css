@@ -602,6 +602,19 @@ ul.plain {
   color: inherit;
 }
 
+.more-photos {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 55%);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .flip-back {
   position: absolute;
   top: 8px;

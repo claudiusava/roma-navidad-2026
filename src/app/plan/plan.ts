@@ -3,7 +3,7 @@ import { DAYS } from '../data/days';
 import { TICKETS } from '../data/tickets';
 import { PHOTOS } from '../data/photos.generated';
 import { Step, StepKind } from '../data/types';
-import { routeUrl, searchUrl } from '../core/maps';
+import { photosUrl, routeUrl, searchUrl } from '../core/maps';
 import { TripState } from '../core/trip-state';
 
 const ICONS: Record<StepKind, string> = {
@@ -71,6 +71,10 @@ export class Plan {
 
   protected icon(kind: StepKind): string {
     return ICONS[kind];
+  }
+
+  protected googlePhotos(place: string): string {
+    return photosUrl(place);
   }
 
   protected maps(place: string): string {

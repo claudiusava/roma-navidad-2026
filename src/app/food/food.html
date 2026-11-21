@@ -37,7 +37,10 @@
     </div>
     <p>{{ r.why }}</p>
     <p class="order"><strong>Pedid:</strong> {{ r.order }}</p>
-    <a class="pill link" [href]="maps(r.name, r.zone)" target="_blank" rel="noopener">📍 Mapa</a>
+    <div class="step-actions">
+      <a class="pill" [href]="photos(r.name, r.zone)" target="_blank" rel="noopener">📷 Fotos ↗</a>
+      <a class="pill link" [href]="maps(r.name, r.zone)" target="_blank" rel="noopener">📍 Mapa</a>
+    </div>
   </article>
 }
 

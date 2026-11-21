@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { RESTAURANTS, SWEETS } from '../data/food';
-import { searchUrl } from '../core/maps';
+import { photosUrl, searchUrl } from '../core/maps';
 
 type Filter = 'todos' | 'reserva' | 'barato' | 'plan';
 
@@ -31,6 +31,10 @@ export class Food {
         return RESTAURANTS;
     }
   });
+
+  protected photos(name: string, zone: string): string {
+    return photosUrl(zone === 'Nápoles' ? name + ', Napoli' : name);
+  }
 
   protected maps(name: string, zone: string): string {
     return searchUrl(zone === 'Nápoles' ? name + ', Napoli' : name);

@@ -20,3 +20,8 @@ export function directionsTo(destination: string, mode: 'walking' | 'transit' = 
   const params = new URLSearchParams({ api: '1', destination: withCity(destination), travelmode: mode });
   return 'https://www.google.com/maps/dir/?' + params.toString();
 }
+
+/** Búsqueda de Google Imágenes del lugar (se abre en el navegador; no se copia nada a la web). */
+export function photosUrl(query: string): string {
+  return 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(withCity(query));
+}
