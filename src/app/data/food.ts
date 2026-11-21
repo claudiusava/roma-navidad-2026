@@ -98,7 +98,6 @@ export const RESTAURANTS: Restaurant[] = [
     reserve: false,
     why: 'Pizza rossa y bianca al peso, de pie. Comida rápida de verdad.',
     order: 'Pizza rossa, pizza bianca con mortadela',
-    day: 'Vie 18 · comida',
   },
   {
     name: 'Bonci Pizzarium',
@@ -108,6 +107,7 @@ export const RESTAURANTS: Restaurant[] = [
     reserve: false,
     why: 'La pizza al corte más famosa de Roma. Sin mesas.',
     order: 'Lo que salga del horno en ese momento',
+    day: 'Sáb 19 · comida',
   },
   {
     name: 'Pastasciutta',
@@ -117,7 +117,7 @@ export const RESTAURANTS: Restaurant[] = [
     reserve: false,
     why: 'Pasta fresca hecha al momento por unos 8 €.',
     order: 'Carbonara o amatriciana',
-    day: 'Sáb 19 · comida',
+    day: 'Vie 18 · comida',
   },
   {
     name: 'Trapizzino',

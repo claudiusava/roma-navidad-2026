@@ -71,6 +71,14 @@ describe('Datos del viaje', () => {
     expect(fri.steps.find((s) => s.ticket === 'freetour')?.time).toBe('10:30');
   });
 
+  it('la Borghese no cae en lunes (cierra) y la cúpula va tras el free tour', () => {
+    const borghese = DAYS.find((d) => d.steps.some((s) => s.ticket === 'borghese'))!;
+    expect(new Date(borghese.date + 'T12:00:00').getDay()).not.toBe(1);
+    const fri = DAYS.find((d) => d.date === '2026-12-18')!;
+    const idx = (t: string) => fri.steps.findIndex((s) => s.ticket === t);
+    expect(idx('cupula')).toBeGreaterThan(idx('freetour'));
+  });
+
   it('el Vaticano no cae en domingo', () => {
     const sunday = DAYS.find((d) => d.date === '2026-12-20')!;
     expect(sunday.steps.some((s) => s.ticket === 'vaticano')).toBe(false);
