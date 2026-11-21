@@ -39,37 +39,64 @@
     <li class="step" [class.done]="isDone($index)" [class.optional]="s.optional" [attr.data-kind]="s.kind">
       <div class="step-time">{{ s.time }}</div>
       <div class="step-dot" aria-hidden="true">{{ icon(s.kind) }}</div>
-      <div class="step-body">
-        <h3>
-          {{ s.title }}
-          @if (s.optional) {
-            <span class="pill soft">opcional</span>
+      <div
+        class="step-card"
+        [class.has-photo]="!!photo(s)"
+        [class.flipped]="isFlipped($index)"
+        (click)="onCardClick($event, s, $index)"
+      >
+        <div class="flip-inner">
+          <div class="face front step-body" [attr.aria-hidden]="isFlipped($index)" [attr.inert]="isFlipped($index) ? '' : null">
+            <h3>
+              {{ s.title }}
+              @if (s.optional) {
+                <span class="pill soft">opcional</span>
+              }
+            </h3>
+            <p>{{ s.detail }}</p>
+            <div class="step-actions">
+              @if (photo(s)) {
+                <button type="button" class="pill" (click)="flip($index)">📷 Foto</button>
+              }
+              @if (s.ticket) {
+                <button
+                  type="button"
+                  class="pill"
+                  [class.ok]="isBought(s.ticket)"
+                  [class.warn]="!isBought(s.ticket)"
+                  (click)="goTickets.emit()"
+                >
+                  {{ isBought(s.ticket) ? '✓ Reservado' : '⚠ Falta reservar' }}
+                </button>
+              }
+              @if (s.place) {
+                <a class="pill link" [href]="maps(s.place)" target="_blank" rel="noopener">📍 Mapa</a>
+              }
+              <button
+                type="button"
+                class="pill check"
+                [attr.aria-pressed]="isDone($index)"
+                (click)="state.toggle('done', stepKey($index))"
+              >
+                {{ isDone($index) ? '✓ Hecho' : 'Marcar hecho' }}
+              </button>
+            </div>
+          </div>
+          @if (photo(s); as ph) {
+            <figure class="face back" [attr.aria-hidden]="!isFlipped($index)" [attr.inert]="isFlipped($index) ? null : ''">
+              <img [src]="ph.src" [alt]="s.title" loading="lazy" decoding="async" />
+              <figcaption>
+                <strong>{{ s.title }}</strong>
+                <span>
+                  Foto: <a [href]="ph.page" target="_blank" rel="noopener">{{ ph.author }}</a>
+                  @if (ph.license) {
+                    · {{ ph.license }}
+                  }
+                </span>
+              </figcaption>
+              <button type="button" class="flip-back" (click)="flip($index)" aria-label="Volver al texto">↺</button>
+            </figure>
           }
-        </h3>
-        <p>{{ s.detail }}</p>
-        <div class="step-actions">
-          @if (s.ticket) {
-            <button
-              type="button"
-              class="pill"
-              [class.ok]="isBought(s.ticket)"
-              [class.warn]="!isBought(s.ticket)"
-              (click)="goTickets.emit()"
-            >
-              {{ isBought(s.ticket) ? '✓ Reservado' : '⚠ Falta reservar' }}
-            </button>
-          }
-          @if (s.place) {
-            <a class="pill link" [href]="maps(s.place)" target="_blank" rel="noopener">📍 Mapa</a>
-          }
-          <button
-            type="button"
-            class="pill check"
-            [attr.aria-pressed]="isDone($index)"
-            (click)="state.toggle('done', stepKey($index))"
-          >
-            {{ isDone($index) ? '✓ Hecho' : 'Marcar hecho' }}
-          </button>
         </div>
       </div>
     </li>

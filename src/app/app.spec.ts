@@ -5,6 +5,7 @@ import { DAYS } from './data/days';
 import { TICKETS } from './data/tickets';
 import { routeUrl, searchUrl } from './core/maps';
 import { TripState } from './core/trip-state';
+import { PHOTOS } from './data/photos.generated';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -82,6 +83,39 @@ describe('Datos del viaje', () => {
   it('el Vaticano no cae en domingo', () => {
     const sunday = DAYS.find((d) => d.date === '2026-12-20')!;
     expect(sunday.steps.some((s) => s.ticket === 'vaticano')).toBe(false);
+  });
+});
+
+describe('Fotos', () => {
+  beforeEach(async () => {
+    localStorage.clear();
+    location.hash = '';
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideServiceWorker('ngsw-worker.js', { enabled: false })],
+    }).compileComponents();
+  });
+
+  it('cada foto corresponde a un lugar del plan y tiene autor', () => {
+    const places = new Set(DAYS.flatMap((d) => [...d.steps, ...(d.planB?.steps ?? [])]).map((s) => s.place));
+    for (const [place, ph] of Object.entries(PHOTOS)) {
+      expect(places.has(place), place).toBe(true);
+      expect(ph.author.length, place).toBeGreaterThan(0);
+      expect(ph.src).toMatch(/^photos\/.+\.jpg$/);
+    }
+  });
+
+  it('al tocar la tarjeta se gira y muestra la foto', async () => {
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const el = fixture.nativeElement as HTMLElement;
+    (el.querySelectorAll<HTMLButtonElement>('.day-chip')[1]).click();
+    await fixture.whenStable();
+    const card = el.querySelector<HTMLElement>('.step-card.has-photo')!;
+    card.querySelector<HTMLElement>('p')!.click();
+    await fixture.whenStable();
+    expect(card.classList).toContain('flipped');
+    expect(card.querySelector('img')?.getAttribute('src')).toMatch(/^photos\//);
   });
 });
 

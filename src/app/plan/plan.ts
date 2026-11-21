@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, output, signal } from '@angular/core';
 import { DAYS } from '../data/days';
 import { TICKETS } from '../data/tickets';
+import { PHOTOS } from '../data/photos.generated';
 import { Step, StepKind } from '../data/types';
 import { routeUrl, searchUrl } from '../core/maps';
 import { TripState } from '../core/trip-state';
@@ -41,6 +42,32 @@ export class Plan {
     }
     return d.route ? routeUrl(d.route, d.travelMode) : null;
   });
+
+  /** Pasos girados (mostrando la foto). */
+  protected readonly flipped = signal<ReadonlySet<string>>(new Set());
+
+  protected photo(s: Step) {
+    return s.place ? PHOTOS[s.place] : undefined;
+  }
+
+  protected isFlipped(i: number): boolean {
+    return this.flipped().has(this.stepKey(i));
+  }
+
+  protected flip(i: number): void {
+    const key = this.stepKey(i);
+    this.flipped.update((set) => {
+      const next = new Set(set);
+      if (!next.delete(key)) next.add(key);
+      return next;
+    });
+  }
+
+  /** Tocar la tarjeta la gira, salvo si se toca un botón o enlace. */
+  protected onCardClick(ev: MouseEvent, s: Step, i: number): void {
+    if (!this.photo(s) || (ev.target as HTMLElement).closest('a, button')) return;
+    this.flip(i);
+  }
 
   protected icon(kind: StepKind): string {
     return ICONS[kind];

@@ -11,6 +11,8 @@ npm start
 
 Los datos del viaje están en `src/app/data/`. Lo que se marca en la app (entradas compradas, pasos hechos, alojamiento, presupuesto) se guarda en el `localStorage` de cada móvil.
 
+Las fotos de los lugares salen de Wikimedia Commons (licencias libres, con crédito en cada tarjeta). Para añadir o cambiar una, edita `tools/photos.json` y ejecuta `node tools/fetch-photos.mjs [lugar]` y luego `python tools/optimize-photos.py`.
+
 `node tools/make-icons.mjs` regenera los iconos desde `tools/icon.svg`.
 
 ## Despliegue
