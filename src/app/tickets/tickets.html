@@ -1,0 +1,44 @@
+<section class="section-head">
+  <h2>Entradas y reservas</h2>
+  <p class="lead">Marcad cada cosa al comprarla y apuntad el localizador. Se guarda en este móvil.</p>
+  <div class="progress" role="progressbar" [attr.aria-valuenow]="boughtCount()" aria-valuemin="0" [attr.aria-valuemax]="total">
+    <div class="bar" [style.width.%]="(boughtCount() / total) * 100"></div>
+  </div>
+  <p class="muted">{{ boughtCount() }} de {{ total }} reservas hechas</p>
+</section>
+
+@for (g of groups; track g.urgency) {
+  <h3 class="group-title">{{ g.title }}</h3>
+  <p class="muted group-hint">{{ g.hint }}</p>
+  @for (t of g.tickets; track t.id) {
+    <article class="card ticket" [class.bought]="isBought(t)" [attr.data-urgency]="t.urgency">
+      <header>
+        <label class="check-row">
+          <input type="checkbox" [checked]="isBought(t)" (change)="state.toggle('bought', t.id)" />
+          <span>
+            <strong>{{ t.name }}</strong>
+            <small>{{ t.when }}</small>
+          </span>
+        </label>
+      </header>
+      <p class="price">{{ t.price }}</p>
+      <p class="deadline">{{ t.deadline }}</p>
+      @if (t.notes) {
+        <p class="muted">{{ t.notes }}</p>
+      }
+      <a class="btn small" [href]="t.url" target="_blank" rel="noopener">Abrir {{ t.urlLabel }} ↗</a>
+      <textarea
+        rows="2"
+        [value]="note(t)"
+        (input)="onNote(t, $event)"
+        placeholder="Localizador, hora confirmada, punto de encuentro…"
+        [attr.aria-label]="'Notas de ' + t.name"
+      ></textarea>
+    </article>
+  }
+}
+
+<p class="muted small-print">
+  Precios aproximados de noviembre de 2026. Comprad siempre en la web oficial: hay muchas webs que imitan las
+  oficiales y cobran más.
+</p>

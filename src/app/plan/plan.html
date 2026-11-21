@@ -1,0 +1,88 @@
+<nav class="days" aria-label="Días del viaje">
+  @for (d of days; track d.id) {
+    <button
+      type="button"
+      class="day-chip"
+      [class.active]="d.id === dayId()"
+      [attr.aria-pressed]="d.id === dayId()"
+      (click)="dayId.set(d.id)"
+    >
+      <span class="dow">{{ d.short.split(' ')[0] }}</span>
+      <span class="num">{{ d.short.split(' ')[1] }}</span>
+    </button>
+  }
+</nav>
+
+<section class="day-head">
+  <p class="eyebrow">{{ dateLabel(day().date) }}</p>
+  <h2>{{ showPlanB() ? day().planB!.title : day().title }}</h2>
+  <p class="lead">{{ day().summary }}</p>
+
+  @if (day().planB) {
+    <div class="segmented" role="group" aria-label="Plan del lunes">
+      <button type="button" [class.on]="!showPlanB()" (click)="state.mondayPlan.set('pompeya')">
+        Pompeya + Nápoles
+      </button>
+      <button type="button" [class.on]="showPlanB()" (click)="state.mondayPlan.set('roma')">
+        Quedarse en Roma
+      </button>
+    </div>
+  }
+
+  @if (routeLink(); as link) {
+    <a class="btn primary" [href]="link" target="_blank" rel="noopener">🗺️ Ruta del día en Google Maps</a>
+  }
+</section>
+
+<ol class="timeline">
+  @for (s of steps(); track $index) {
+    <li class="step" [class.done]="isDone($index)" [class.optional]="s.optional" [attr.data-kind]="s.kind">
+      <div class="step-time">{{ s.time }}</div>
+      <div class="step-dot" aria-hidden="true">{{ icon(s.kind) }}</div>
+      <div class="step-body">
+        <h3>
+          {{ s.title }}
+          @if (s.optional) {
+            <span class="pill soft">opcional</span>
+          }
+        </h3>
+        <p>{{ s.detail }}</p>
+        <div class="step-actions">
+          @if (s.ticket) {
+            <button
+              type="button"
+              class="pill"
+              [class.ok]="isBought(s.ticket)"
+              [class.warn]="!isBought(s.ticket)"
+              (click)="goTickets.emit()"
+            >
+              {{ isBought(s.ticket) ? '✓ Reservado' : '⚠ Falta reservar' }}
+            </button>
+          }
+          @if (s.place) {
+            <a class="pill link" [href]="maps(s.place)" target="_blank" rel="noopener">📍 Mapa</a>
+          }
+          <button
+            type="button"
+            class="pill check"
+            [attr.aria-pressed]="isDone($index)"
+            (click)="state.toggle('done', stepKey($index))"
+          >
+            {{ isDone($index) ? '✓ Hecho' : 'Marcar hecho' }}
+          </button>
+        </div>
+      </div>
+    </li>
+  }
+</ol>
+
+@if (day().tips?.length && !showPlanB()) {
+  <aside class="card tips">
+    <h3>💡 Consejos del día</h3>
+    <ul>
+      @for (t of day().tips; track $index) {
+        <li>{{ t }}</li>
+      }
+    </ul>
+  </aside>
+}

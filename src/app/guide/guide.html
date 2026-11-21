@@ -1,0 +1,89 @@
+<section class="section-head">
+  <h2>Guía práctica</h2>
+  <p class="lead">Presupuesto, Navidad, transporte, comida y frases útiles.</p>
+</section>
+
+<details class="card fold" open>
+  <summary><h3>💶 Presupuesto estimado</h3></summary>
+  <p class="muted">
+    Sin vuelos ni alojamiento. Cifras por persona y editables: tocad un importe para cambiarlo.
+    {{ state.mondayPlan() === 'roma' ? 'El lunes está en Roma, así que no cuenta Pompeya.' : '' }}
+  </p>
+  <table class="budget">
+    <tbody>
+      @for (l of lines(); track l.id) {
+        <tr>
+          <th scope="row">{{ l.label }}</th>
+          <td>
+            <input
+              type="number"
+              inputmode="decimal"
+              min="0"
+              [value]="value(l)"
+              (input)="onValue(l, $event)"
+              [attr.aria-label]="l.label + ' (€ por persona)'"
+            />
+            €
+          </td>
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      <tr>
+        <th scope="row">Por persona</th>
+        <td>{{ perPerson() }} €</td>
+      </tr>
+      <tr class="grand">
+        <th scope="row">
+          Total para
+          <input
+            class="people"
+            type="number"
+            min="1"
+            [value]="state.people()"
+            (input)="state.people.set(+$any($event.target).value || 1)"
+            aria-label="Número de personas"
+          />
+          personas
+        </th>
+        <td>{{ total() }} €</td>
+      </tr>
+    </tfoot>
+  </table>
+  <button type="button" class="btn small" (click)="reset()">Restaurar valores</button>
+</details>
+
+@for (sec of sections; track sec.title) {
+  <details class="card fold">
+    <summary><h3>{{ sec.icon }} {{ sec.title }}</h3></summary>
+    <ul>
+      @for (i of sec.items; track $index) {
+        <li>{{ i }}</li>
+      }
+    </ul>
+  </details>
+}
+
+<details class="card fold">
+  <summary><h3>🗣️ Frases útiles</h3></summary>
+  <p class="muted">Tocad una frase para oírla en italiano.</p>
+  <ul class="phrases">
+    @for (p of phrases; track p.it) {
+      <li>
+        <button type="button" (click)="speak(p.it)">
+          <span class="it">{{ p.it }}</span>
+          <span class="es">{{ p.es }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</details>
+
+<details class="card fold">
+  <summary><h3>☎️ Teléfonos</h3></summary>
+  <ul class="plain">
+    <li><a href="tel:112">112</a> · Emergencias</li>
+    <li><a href="tel:+39060606">06 06 06</a> · Atención municipal de Roma (también en inglés)</li>
+    <li><a href="tel:+39063570">06 3570</a> · Radiotaxi</li>
+  </ul>
+</details>

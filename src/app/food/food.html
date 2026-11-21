@@ -1,0 +1,54 @@
+<section class="section-head">
+  <h2>Dónde comer</h2>
+  <p class="lead">
+    Sobre todo trattorias auténticas y baratas, dos de gama media que merecen la pena y una cena especial opcional.
+  </p>
+  <div class="chips" role="group" aria-label="Filtro">
+    @for (f of filters; track f.id) {
+      <button type="button" class="chip" [class.active]="filter() === f.id" (click)="filter.set(f.id)">
+        {{ f.label }}
+      </button>
+    }
+  </div>
+</section>
+
+@for (r of list(); track r.name) {
+  <article class="card food" [class.special]="r.tag === 'especial'">
+    <header class="food-head">
+      <div>
+        <h3>{{ r.name }}</h3>
+        <p class="muted">{{ r.kind }} · {{ r.zone }}</p>
+      </div>
+      <span class="price-tag">{{ r.price }}</span>
+    </header>
+    <div class="tags">
+      @if (r.tag === 'especial') {
+        <span class="pill gold">★ Cena especial</span>
+      }
+      @if (r.tag === 'merece') {
+        <span class="pill gold">Merece la pena</span>
+      }
+      @if (r.reserve) {
+        <span class="pill warn">Reservar</span>
+      }
+      @if (r.day) {
+        <span class="pill soft">{{ r.day }}</span>
+      }
+    </div>
+    <p>{{ r.why }}</p>
+    <p class="order"><strong>Pedid:</strong> {{ r.order }}</p>
+    <a class="pill link" [href]="maps(r.name, r.zone)" target="_blank" rel="noopener">📍 Mapa</a>
+  </article>
+}
+
+<h3 class="group-title">☕ Cafés y helados</h3>
+<div class="card">
+  <ul class="plain">
+    @for (s of sweets; track s.name) {
+      <li>
+        <a [href]="maps(s.name, s.zone)" target="_blank" rel="noopener">{{ s.name }}</a>
+        <span class="muted"> · {{ s.what }} ({{ s.zone }})</span>
+      </li>
+    }
+  </ul>
+</div>

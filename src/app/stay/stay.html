@@ -1,0 +1,93 @@
+<section class="section-head">
+  <h2>Alojamiento</h2>
+  <p class="lead">
+    Apuntad las opciones que estáis mirando y marcad la definitiva. Se guarda solo en este móvil.
+  </p>
+</section>
+
+@for (s of state.stays(); track s.id) {
+  <article class="card stay" [class.chosen]="s.chosen">
+    <header class="food-head">
+      <div>
+        <h3>{{ s.name || 'Sin nombre' }}</h3>
+        <p class="muted">{{ s.address || 'Sin dirección' }}</p>
+      </div>
+      @if (s.chosen) {
+        <span class="pill ok">✓ El nuestro</span>
+      }
+    </header>
+
+    @if (editing() === s.id) {
+      <div class="form">
+        @for (f of fields; track f.key) {
+          <label>
+            <span>{{ f.label }}</span>
+            <input [type]="f.type" [value]="s[f.key]" [placeholder]="f.placeholder" (input)="set(s.id, f.key, $event)" />
+          </label>
+        }
+        <button type="button" class="btn primary" (click)="editing.set(null)">Guardar</button>
+      </div>
+    } @else {
+      <dl class="facts">
+        @if (s.checkIn || s.checkOut) {
+          <dt>Fechas</dt>
+          <dd>{{ s.checkIn }} → {{ s.checkOut }}</dd>
+        }
+        @if (s.code) {
+          <dt>Código</dt>
+          <dd>{{ s.code }}</dd>
+        }
+        @if (s.phone) {
+          <dt>Teléfono</dt>
+          <dd><a [href]="'tel:' + s.phone">{{ s.phone }}</a></dd>
+        }
+        @if (s.notes) {
+          <dt>Notas</dt>
+          <dd>{{ s.notes }}</dd>
+        }
+      </dl>
+      <div class="step-actions">
+        @if (s.address || s.name) {
+          <a class="pill link" [href]="mapUrl(s)" target="_blank" rel="noopener">📍 Mapa</a>
+          <a class="pill link" [href]="toCentre(s)" target="_blank" rel="noopener">🚶 Al Panteón</a>
+          <a class="pill link" [href]="fromAirport(s)" target="_blank" rel="noopener">🚕 Desde FCO</a>
+        }
+        @if (s.link) {
+          <a class="pill link" [href]="s.link" target="_blank" rel="noopener">Reserva ↗</a>
+        }
+        <button type="button" class="pill" (click)="editing.set(s.id)">Editar</button>
+        @if (!s.chosen) {
+          <button type="button" class="pill" (click)="choose(s.id)">Elegir este</button>
+        }
+        <button type="button" class="pill danger" (click)="remove(s)">Borrar</button>
+      </div>
+    }
+  </article>
+} @empty {
+  <div class="card empty">
+    <p>Aún no hay ningún alojamiento apuntado.</p>
+  </div>
+}
+
+<button type="button" class="btn primary block" (click)="add()">+ Añadir alojamiento</button>
+
+<aside class="card tips">
+  <h3>💡 Para elegir</h3>
+  <ul>
+    <li>
+      <strong>Murallas Aurelianas:</strong> si el alojamiento está dentro, el taxi de Fiumicino tiene tarifa fija de
+      55 €. Ojo: Prati y el Vaticano quedan <em>fuera</em>, y allí va con taxímetro.
+    </li>
+    <li>
+      <strong>Media hora andando del centro</strong> está bien si tenéis metro cerca: Termini y Monti (líneas A y B),
+      Prati (A), San Giovanni (A) o Testaccio/Piramide (B). Trastevere no tiene metro, pero se va andando a casi todo.
+    </li>
+    <li>
+      Evitad los alrededores inmediatos de Termini y el Esquilino para pasear de noche: son prácticos, pero menos agradables.
+    </li>
+    <li>
+      Como el vuelo de vuelta es a las 9:00, que el alojamiento permita salir a las 6:30 sin recepción (con caja de
+      llaves o self check-out).
+    </li>
+  </ul>
+</aside>

@@ -1,0 +1,48 @@
+<header class="hero">
+  <div class="hero-inner">
+    <p class="hero-dates">17 – 22 de diciembre de 2026</p>
+    <h1>Roma <span class="star" aria-hidden="true">✦</span> Navidad</h1>
+    <p class="hero-count">{{ countdown() }}</p>
+  </div>
+</header>
+
+@if (updateReady()) {
+  <button type="button" class="update-banner" (click)="reload()">Hay una versión nueva del plan · Tocar para actualizar</button>
+}
+
+<main>
+  @switch (tab()) {
+    @case ('plan') {
+      <app-plan (goTickets)="go('entradas')" />
+    }
+    @case ('entradas') {
+      <app-tickets />
+    }
+    @case ('comer') {
+      <app-food />
+    }
+    @case ('casa') {
+      <app-stay />
+    }
+    @case ('guia') {
+      <app-guide />
+    }
+  }
+</main>
+
+<nav class="tabbar" aria-label="Secciones">
+  @for (t of tabs; track t.id) {
+    <button
+      type="button"
+      [class.active]="tab() === t.id"
+      [attr.aria-current]="tab() === t.id ? 'page' : null"
+      (click)="go(t.id)"
+    >
+      <span class="tab-icon" aria-hidden="true">{{ t.icon }}</span>
+      <span class="tab-label">{{ t.label }}</span>
+      @if (t.id === 'entradas' && pending() > 0) {
+        <span class="badge" [attr.aria-label]="pending() + ' urgentes sin comprar'">{{ pending() }}</span>
+      }
+    </button>
+  }
+</nav>
