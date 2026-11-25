@@ -15,19 +15,8 @@
 
 <section class="day-head">
   <p class="eyebrow">{{ dateLabel(day().date) }}</p>
-  <h2>{{ showPlanB() ? day().planB!.title : day().title }}</h2>
+  <h2>{{ day().title }}</h2>
   <p class="lead">{{ day().summary }}</p>
-
-  @if (day().planB) {
-    <div class="segmented" role="group" aria-label="Plan del lunes">
-      <button type="button" [class.on]="!showPlanB()" (click)="state.mondayPlan.set('pompeya')">
-        Pompeya + Nápoles
-      </button>
-      <button type="button" [class.on]="showPlanB()" (click)="state.mondayPlan.set('roma')">
-        Quedarse en Roma
-      </button>
-    </div>
-  }
 
   @if (routeLink(); as link) {
     <a class="btn primary" [href]="link" target="_blank" rel="noopener">🗺️ Ruta del día en Google Maps</a>
@@ -47,42 +36,50 @@
       >
         <div class="flip-inner">
           <div class="face front step-body" [attr.aria-hidden]="isFlipped($index)" [attr.inert]="isFlipped($index) ? '' : null">
-            <h3>
-              {{ s.title }}
-              @if (s.optional) {
-                <span class="pill soft">opcional</span>
-              }
-            </h3>
-            <p>{{ s.detail }}</p>
-            <div class="step-actions">
-              @if (photo(s)) {
-                <button type="button" class="pill" (click)="flip($index)">📷 Foto</button>
-              } @else if (s.place) {
-                <a class="pill" [href]="googlePhotos(s.place)" target="_blank" rel="noopener">📷 Fotos ↗</a>
-              }
-              @if (s.ticket) {
-                <button
-                  type="button"
-                  class="pill"
-                  [class.ok]="isBought(s.ticket)"
-                  [class.warn]="!isBought(s.ticket)"
-                  (click)="goTickets.emit()"
-                >
-                  {{ isBought(s.ticket) ? '✓ Reservado' : '⚠ Falta reservar' }}
-                </button>
-              }
-              @if (s.place) {
-                <a class="pill link" [href]="maps(s.place)" target="_blank" rel="noopener">📍 Mapa</a>
-              }
+            <div class="step-title">
+              <h3>
+                {{ s.title }}
+                @if (s.optional) {
+                  <span class="pill soft">opcional</span>
+                }
+              </h3>
               <button
                 type="button"
-                class="pill check"
+                class="done-btn"
                 [attr.aria-pressed]="isDone($index)"
+                [attr.aria-label]="isDone($index) ? 'Marcar como pendiente' : 'Marcar como hecho'"
                 (click)="state.toggle('done', stepKey($index))"
               >
-                {{ isDone($index) ? '✓ Hecho' : 'Marcar hecho' }}
+                ✓
               </button>
             </div>
+            <p>{{ s.detail }}</p>
+            @if (s.place || s.ticket) {
+              <div class="step-actions">
+                @if (audio.has(s.place)) {
+                  <button type="button" class="pill audio" (click)="audio.open(s.place!)">🎧 Audioguía</button>
+                }
+                @if (photo(s)) {
+                  <button type="button" class="pill" (click)="flip($index)">📷 Foto</button>
+                } @else if (s.place) {
+                  <a class="pill" [href]="googlePhotos(s.place)" target="_blank" rel="noopener">📷 Fotos ↗</a>
+                }
+                @if (s.ticket) {
+                  <button
+                    type="button"
+                    class="pill"
+                    [class.ok]="isBought(s.ticket)"
+                    [class.warn]="!isBought(s.ticket)"
+                    (click)="goTickets.emit()"
+                  >
+                    {{ isBought(s.ticket) ? '✓ Reservado' : '⚠ Reservar' }}
+                  </button>
+                }
+                @if (s.place) {
+                  <a class="pill link" [href]="maps(s.place)" target="_blank" rel="noopener">📍 Mapa</a>
+                }
+              </div>
+            }
           </div>
           @if (photo(s); as ph) {
             <figure class="face back" [attr.aria-hidden]="!isFlipped($index)" [attr.inert]="isFlipped($index) ? null : ''">
@@ -106,7 +103,7 @@
   }
 </ol>
 
-@if (day().tips?.length && !showPlanB()) {
+@if (day().tips?.length) {
   <aside class="card tips">
     <h3>💡 Consejos del día</h3>
     <ul>

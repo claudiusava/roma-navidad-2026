@@ -48,12 +48,6 @@ export const PHOTOS: Record<string, { src: string; author: string; license: stri
     "license": "CC BY-SA 4.0",
     "page": "https://commons.wikimedia.org/wiki/File:Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg"
   },
-  "Castel Sant'Angelo": {
-    "src": "photos/castel-sant-angelo.jpg",
-    "author": "Livioandronico2013",
-    "license": "CC BY-SA 4.0",
-    "page": "https://commons.wikimedia.org/wiki/File:Castel_Sant%27Angelo_at_Night.jpg"
-  },
   "Musei Vaticani": {
     "src": "photos/musei-vaticani.jpg",
     "author": "Colin",
@@ -114,12 +108,6 @@ export const PHOTOS: Record<string, { src: string; author: string; license: stri
     "license": "CC BY-SA 4.0",
     "page": "https://commons.wikimedia.org/wiki/File:Piazza_del_Campidoglio_2015.jpg"
   },
-  "Portico d'Ottavia": {
-    "src": "photos/portico-d-ottavia.jpg",
-    "author": "Portico_Octavia_Rome.jpg: Jensens derivative work: Ptyx (talk)",
-    "license": "Public domain",
-    "page": "https://commons.wikimedia.org/wiki/File:Portico_Octavia_Rome_2.jpg"
-  },
   "Bocca della Verità": {
     "src": "photos/bocca-della-verita.jpg",
     "author": "Sailko",
@@ -137,30 +125,6 @@ export const PHOTOS: Record<string, { src: string; author: string; license: stri
     "author": "Hide1228",
     "license": "CC BY-SA 4.0",
     "page": "https://commons.wikimedia.org/wiki/File:Roma_termini_01.jpg"
-  },
-  "Napoli Garibaldi Circumvesuviana": {
-    "src": "photos/napoli-garibaldi-circumvesuviana.jpg",
-    "author": "Alf Altendorf from Salzburg, Austria",
-    "license": "CC BY-SA 2.0",
-    "page": "https://commons.wikimedia.org/wiki/File:Circumvesuviana_Porta_Nolana.jpeg"
-  },
-  "Pompei Scavi": {
-    "src": "photos/pompei-scavi.jpg",
-    "author": "Carsten Steger",
-    "license": "CC BY-SA 4.0",
-    "page": "https://commons.wikimedia.org/wiki/File:Aerial_image_of_Pompeii_and_Mount_Vesuvius_(view_from_the_southeast).jpg"
-  },
-  "Via San Gregorio Armeno": {
-    "src": "photos/via-san-gregorio-armeno.jpg",
-    "author": "Photo2023",
-    "license": "CC BY 4.0",
-    "page": "https://commons.wikimedia.org/wiki/File:Via_San_Gregorio_Armeno.jpg"
-  },
-  "Napoli Centrale": {
-    "src": "photos/napoli-centrale.jpg",
-    "author": "Nasreddine Nas'h",
-    "license": "CC BY-SA 4.0",
-    "page": "https://commons.wikimedia.org/wiki/File:Gare_ferroviaire_de_Naples-Centrale.jpg"
   },
   "Basilica di San Clemente": {
     "src": "photos/basilica-di-san-clemente.jpg",
@@ -203,5 +167,29 @@ export const PHOTOS: Record<string, { src: string; author: string; license: stri
     "author": "valyag",
     "license": "CC BY-SA 3.0",
     "page": "https://commons.wikimedia.org/wiki/File:Saint_Peter%27s_Square_from_the_dome.jpg"
+  },
+  "Via Margutta": {
+    "src": "photos/via-margutta.jpg",
+    "author": "User:Stephen Sommerhalter",
+    "license": "CC BY-SA 3.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Via_Marguta_Rome.jpg"
+  },
+  "Via Appia Antica": {
+    "src": "photos/via-appia-antica.jpg",
+    "author": "Livioandronico2013",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Appian_Way.jpg"
+  },
+  "Castel Sant'Angelo": {
+    "src": "photos/castel-sant-angelo.jpg",
+    "author": "Livioandronico2013",
+    "license": "CC BY-SA 4.0",
+    "page": "https://commons.wikimedia.org/wiki/File:Castel_Sant%27Angelo_at_Night.jpg"
+  },
+  "Portico d'Ottavia": {
+    "src": "photos/portico-d-ottavia.jpg",
+    "author": "Portico_Octavia_Rome.jpg: Jensens derivative work: Ptyx (talk)",
+    "license": "Public domain",
+    "page": "https://commons.wikimedia.org/wiki/File:Portico_Octavia_Rome_2.jpg"
   }
 };

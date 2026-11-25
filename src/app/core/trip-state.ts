@@ -47,7 +47,6 @@ export class TripState {
   readonly stays = persisted<Stay[]>('stays', []);
   readonly budget = persisted<Record<string, number>>('budget', {});
   readonly people = persisted<number>('people', 2);
-  readonly mondayPlan = persisted<'pompeya' | 'roma'>('mondayPlan', 'pompeya');
 
   readonly chosenStay = computed(() => this.stays().find((s) => s.chosen) ?? null);
 

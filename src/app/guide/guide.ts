@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { BUDGET_DEFAULTS, BudgetLine, GUIDE, PHRASES } from '../data/guide';
 import { TripState } from '../core/trip-state';
-
-const POMPEYA_LINES = ['trenes', 'circum', 'pompeya'];
+import { AudioPlayer } from '../core/audio-player';
+import { AUDIO } from '../data/audio';
+import { DAYS } from '../data/days';
 
 @Component({
   selector: 'app-guide',
@@ -13,11 +14,21 @@ export class Guide {
   protected readonly state = inject(TripState);
   protected readonly sections = GUIDE;
   protected readonly phrases = PHRASES;
+  protected readonly audio = inject(AudioPlayer);
 
-  protected readonly lines = computed(() => {
-    const stayInRome = this.state.mondayPlan() === 'roma';
-    return BUDGET_DEFAULTS.filter((l) => !(stayInRome && POMPEYA_LINES.includes(l.id)));
-  });
+  /** Audioguías agrupadas por día, sin repetir. */
+  protected readonly audioByDay = (() => {
+    const seen = new Set<string>();
+    return DAYS.map((d) => ({
+      day: d.short,
+      guides: d.steps
+        .map((s) => s.place)
+        .filter((p): p is string => !!p && p in AUDIO && !seen.has(p) && !!seen.add(p))
+        .map((p) => ({ place: p, title: AUDIO[p].title, chapters: AUDIO[p].chapters.length })),
+    })).filter((g) => g.guides.length);
+  })();
+
+  protected readonly lines = computed(() => BUDGET_DEFAULTS);
 
   protected value(l: BudgetLine): number {
     return this.state.budget()[l.id] ?? l.perPerson;

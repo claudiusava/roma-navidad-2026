@@ -1,5 +1,6 @@
 @import '@fontsource/playfair-display/600.css';
 @import '@fontsource/playfair-display/700.css';
+@import 'leaflet/dist/leaflet.css';
 
 :root {
   --bg: #f8f3ea;
@@ -427,16 +428,16 @@ ul.plain {
 
 .step {
   display: grid;
-  grid-template-columns: 40px 30px 1fr;
+  grid-template-columns: 38px 28px 1fr;
   gap: 0 6px;
   position: relative;
-  padding-bottom: 18px;
+  padding-bottom: 12px;
 }
 
 .step::before {
   content: '';
   position: absolute;
-  left: calc(40px + 6px + 14px);
+  left: calc(38px + 6px + 13px);
   top: 34px;
   bottom: 0;
   width: 2px;
@@ -456,8 +457,8 @@ ul.plain {
 }
 
 .step-dot {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--surface);
   border: 2px solid var(--line);
@@ -484,45 +485,77 @@ ul.plain {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   box-shadow: var(--shadow);
   min-width: 0;
 }
 
+.step-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.step-title h3 {
+  flex: 1;
+  padding-top: 3px;
+}
+
+.done-btn {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  margin: -2px -4px 0 0;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: transparent;
+  color: transparent;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.done-btn[aria-pressed='true'] {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: #fff;
+}
+
 .step-body p {
-  margin: 6px 0 0;
-  font-size: 0.93rem;
+  margin: 4px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 .step-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
-.pill.check {
-  margin-left: auto;
-  background: transparent;
+.step-actions .pill {
+  min-height: 30px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
 }
 
-.step.done .step-body {
-  opacity: 0.55;
+.pill.audio {
+  background: var(--pine);
+  border-color: var(--pine);
+  color: #fff;
 }
 
-.step.done .face.back {
-  opacity: 1;
+.step.done .step-body > :not(.step-title) {
+  opacity: 0.5;
+}
+
+.step.done .step-title h3 {
+  opacity: 0.6;
 }
 
 .step.done .step-dot {
   background: var(--ok-bg);
   border-color: var(--ok);
-}
-
-.step.done .pill.check {
-  background: var(--ok-bg);
-  color: var(--ok);
-  border-color: transparent;
 }
 
 .step.optional .step-body {
@@ -549,6 +582,7 @@ ul.plain {
 
 .flip-inner {
   display: grid;
+  position: relative;
   transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1);
   transform-style: preserve-3d;
 }
@@ -563,11 +597,15 @@ ul.plain {
   -webkit-backface-visibility: hidden;
 }
 
+.step-card.flipped .face.front {
+  min-height: 230px;
+}
+
 .face.back {
   transform: rotateY(180deg);
   margin: 0;
-  position: relative;
-  min-height: 210px;
+  position: absolute;
+  inset: 0;
   border-radius: 14px;
   overflow: hidden;
   background: #222;
@@ -893,4 +931,344 @@ ul.plain {
   .hero h1 {
     font-size: 2.8rem;
   }
+}
+
+/* ---------- Audioguía ---------- */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 40%);
+  z-index: 20;
+}
+
+.audio-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 88vh;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: 20px 20px 0 0;
+  padding: 16px 16px calc(12px + env(safe-area-inset-bottom));
+  z-index: 21;
+  box-shadow: 0 -8px 30px rgb(0 0 0 / 25%);
+}
+
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.sheet-head h2 {
+  font-size: 1.35rem;
+}
+
+.icon-btn {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  font-size: 1.05rem;
+}
+
+.chapters {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: none;
+}
+
+.chapters button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  padding: 6px 12px 6px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font-size: 0.85rem;
+}
+
+.chapters button.current {
+  background: var(--pine);
+  border-color: var(--pine);
+  color: #fff;
+}
+
+.ch-num {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.eq {
+  display: inline-flex;
+  gap: 2px;
+  align-items: flex-end;
+  height: 12px;
+}
+
+.eq i {
+  width: 3px;
+  background: currentColor;
+  animation: eq 0.9s ease-in-out infinite;
+}
+
+.eq i:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.eq i:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes eq {
+  0%,
+  100% {
+    height: 3px;
+  }
+  50% {
+    height: 12px;
+  }
+}
+
+.transcript {
+  overflow-y: auto;
+  margin: 12px 0;
+  padding-right: 4px;
+}
+
+.transcript h3 {
+  margin-bottom: 6px;
+}
+
+.transcript p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.transcript .reading {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--gold) 22%, transparent);
+  border-radius: 4px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+.play-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 1.2rem;
+}
+
+.rates {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.rates button {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+  font-size: 0.78rem;
+}
+
+.rates button.on {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.sheet-note {
+  font-size: 0.75rem;
+  margin: 8px 0 0;
+}
+
+.mini-player {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 8px);
+  max-width: 664px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 12px;
+  border-radius: 16px;
+  background: var(--pine);
+  color: #fff;
+  z-index: 15;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 25%);
+}
+
+.mini-player .icon-btn {
+  background: rgb(255 255 255 / 15%);
+  border-color: transparent;
+  color: #fff;
+}
+
+.mini-info {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-title {
+  font-weight: 700;
+}
+
+.mini-sub {
+  font-size: 0.78rem;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-day {
+  margin: 12px 0 4px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.audio-list {
+  list-style: none;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.audio-list li + li {
+  margin-top: 6px !important;
+}
+
+.audio-list button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  padding: 8px 12px;
+}
+
+.audio-list .muted {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.warn-box {
+  background: var(--warn-bg);
+  color: var(--warn);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+/* ---------- Mapa de comer ---------- */
+.food-map {
+  height: 52vh;
+  min-height: 320px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  margin-top: 4px;
+  z-index: 0;
+}
+
+.map-legend {
+  font-size: 0.8rem;
+}
+
+.pin {
+  display: grid !important;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--accent);
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
+}
+
+.pin-dulce {
+  border-color: #8a5a2b;
+}
+
+.pin-special {
+  background: #ffd98a;
+  border-color: #b8871b;
+  color: #6b4a00;
+  font-weight: 800;
+}
+
+.pin-me {
+  border-radius: 50%;
+  background: #2f80ed;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 6px rgb(47 128 237 / 30%);
+}
+
+.pin-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font: 14px/1.4 system-ui, sans-serif;
+}
+
+.pin-popup span {
+  color: #666;
+  font-size: 12px;
+}
+
+.food.hl,
+li.hl {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.near-btn {
+  margin-left: auto;
+}
+
+.segmented button:disabled {
+  opacity: 0.6;
 }

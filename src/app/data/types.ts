@@ -23,7 +23,6 @@ export interface Day {
   route?: string[];
   travelMode?: 'walking' | 'transit';
   tips?: string[];
-  planB?: { title: string; steps: Step[] };
 }
 
 export type Urgency = 'ya' | 'pronto' | 'alli';
@@ -50,4 +49,6 @@ export interface Restaurant {
   order: string;
   day?: string;
   tag?: 'especial' | 'merece';
+  lat: number;
+  lng: number;
 }

@@ -7,7 +7,6 @@
   <summary><h3>💶 Presupuesto estimado</h3></summary>
   <p class="muted">
     Sin vuelos ni alojamiento. Cifras por persona y editables: tocad un importe para cambiarlo.
-    {{ state.mondayPlan() === 'roma' ? 'El lunes está en Roma, así que no cuenta Pompeya.' : '' }}
   </p>
   <table class="budget">
     <tbody>
@@ -51,6 +50,24 @@
     </tfoot>
   </table>
   <button type="button" class="btn small" (click)="reset()">Restaurar valores</button>
+</details>
+
+<details class="card fold">
+  <summary><h3>🎧 Audioguías</h3></summary>
+  <p class="muted">Con la voz del móvil y sin conexión. Podéis escucharlas también antes del viaje.</p>
+  @for (d of audioByDay; track d.day) {
+    <p class="audio-day">{{ d.day }}</p>
+    <ul class="audio-list">
+      @for (a of d.guides; track a.place) {
+        <li>
+          <button type="button" (click)="audio.open(a.place)">
+            <span>{{ a.title }}</span>
+            <span class="muted">{{ a.chapters }} {{ a.chapters === 1 ? 'parte' : 'partes' }} ▶</span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
 </details>
 
 @for (sec of sections; track sec.title) {

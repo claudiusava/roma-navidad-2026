@@ -2,6 +2,11 @@
 
 Planning del viaje a Roma del 17 al 22 de diciembre de 2026: itinerario día a día, entradas que hay que comprar con antelación, dónde comer, alojamiento, presupuesto y guía práctica. Funciona sin conexión (PWA) y se puede instalar en el móvil.
 
+## Audioguías y mapa
+
+- Las audioguías están en `src/app/data/audio.ts` (clave = `place` del paso). Las lee la voz del propio móvil (Web Speech API), así que funcionan sin conexión.
+- El mapa de la pestaña Comer usa Leaflet con teselas de OpenStreetMap (necesita conexión). Las coordenadas están en `src/app/data/food.ts`; `node tools/geocode.mjs` ayuda a buscar nuevas en Nominatim.
+
 ## Desarrollo
 
 ```bash

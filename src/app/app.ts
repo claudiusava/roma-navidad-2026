@@ -6,6 +6,7 @@ import { Tickets } from './tickets/tickets';
 import { Food } from './food/food';
 import { Stay } from './stay/stay';
 import { Guide } from './guide/guide';
+import { AudioSheet } from './audio/audio-sheet';
 import { TICKETS } from './data/tickets';
 import { TripState, todayIso } from './core/trip-state';
 
@@ -26,7 +27,7 @@ function tabFromHash(): Tab {
 
 @Component({
   selector: 'app-root',
-  imports: [Plan, Tickets, Food, Stay, Guide],
+  imports: [Plan, Tickets, Food, Stay, Guide, AudioSheet],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

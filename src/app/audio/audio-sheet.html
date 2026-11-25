@@ -1,0 +1,70 @@
+@if (player.guide(); as g) {
+  @if (player.expanded()) {
+    <div class="sheet-backdrop" (click)="player.expanded.set(false)"></div>
+    <section class="audio-sheet" role="dialog" aria-modal="true" [attr.aria-label]="'Audioguía: ' + g.title">
+      <header class="sheet-head">
+        <div>
+          <p class="eyebrow">🎧 Audioguía</p>
+          <h2>{{ g.title }}</h2>
+        </div>
+        <button type="button" class="icon-btn" (click)="player.expanded.set(false)" aria-label="Minimizar">⌄</button>
+      </header>
+
+      @if (!player.supported) {
+        <p class="warn-box">Este navegador no puede leer en voz alta. Podéis leer el texto aquí abajo.</p>
+      }
+
+      <ol class="chapters">
+        @for (c of g.chapters; track $index) {
+          <li>
+            <button
+              type="button"
+              [class.current]="$index === player.chapter()"
+              (click)="player.playChapter($index)"
+            >
+              <span class="ch-num">{{ $index + 1 }}</span>
+              <span>{{ c.title }}</span>
+              @if ($index === player.chapter() && player.playing()) {
+                <span class="eq" aria-label="sonando"><i></i><i></i><i></i></span>
+              }
+            </button>
+          </li>
+        }
+      </ol>
+
+      <div class="transcript" aria-live="off">
+        <h3>{{ g.chapters[player.chapter()].title }}</h3>
+        <p>
+          @for (s of player.sentences(); track $index) {
+            <span [class.reading]="player.playing() && $index === player.sentence()">{{ s }} </span>
+          }
+        </p>
+      </div>
+
+      <footer class="controls">
+        <button type="button" class="icon-btn" (click)="player.prev()" aria-label="Capítulo anterior">⏮</button>
+        <button type="button" class="play-btn" (click)="player.toggle()" [attr.aria-label]="player.playing() ? 'Pausa' : 'Reproducir'">
+          {{ player.playing() ? '❚❚' : '▶' }}
+        </button>
+        <button type="button" class="icon-btn" (click)="player.next()" aria-label="Capítulo siguiente">⏭</button>
+        <div class="rates" role="group" aria-label="Velocidad">
+          @for (r of rates; track r) {
+            <button type="button" [class.on]="player.rate() === r" (click)="player.setRate(r)">{{ r }}×</button>
+          }
+        </div>
+      </footer>
+      <p class="muted sheet-note">Usa la voz del móvil: funciona sin conexión. La pantalla no se apaga mientras suena.</p>
+    </section>
+  } @else {
+    <div class="mini-player">
+      <button type="button" class="mini-info" (click)="player.expanded.set(true)">
+        <span class="mini-title">🎧 {{ g.title }}</span>
+        <span class="mini-sub">{{ player.chapter() + 1 }}/{{ g.chapters.length }} · {{ g.chapters[player.chapter()].title }}</span>
+      </button>
+      <button type="button" class="icon-btn" (click)="player.toggle()" [attr.aria-label]="player.playing() ? 'Pausa' : 'Reproducir'">
+        {{ player.playing() ? '❚❚' : '▶' }}
+      </button>
+      <button type="button" class="icon-btn" (click)="player.close()" aria-label="Cerrar audioguía">✕</button>
+    </div>
+  }
+}

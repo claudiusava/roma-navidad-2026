@@ -5,6 +5,7 @@ import { PHOTOS } from '../data/photos.generated';
 import { Step, StepKind } from '../data/types';
 import { photosUrl, routeUrl, searchUrl } from '../core/maps';
 import { TripState } from '../core/trip-state';
+import { AudioPlayer } from '../core/audio-player';
 
 const ICONS: Record<StepKind, string> = {
   visit: '🏛️',
@@ -22,24 +23,17 @@ const ICONS: Record<StepKind, string> = {
 })
 export class Plan {
   protected readonly state = inject(TripState);
+  protected readonly audio = inject(AudioPlayer);
   readonly goTickets = output<void>();
 
   protected readonly days = DAYS;
   protected readonly dayId = signal(this.state.defaultDayId());
   protected readonly day = computed(() => DAYS.find((d) => d.id === this.dayId())!);
-  protected readonly showPlanB = computed(
-    () => !!this.day().planB && this.state.mondayPlan() === 'roma',
-  );
-  protected readonly steps = computed<Step[]>(() =>
-    this.showPlanB() ? this.day().planB!.steps : this.day().steps,
-  );
-  protected readonly stepKey = (i: number) => `${this.dayId()}${this.showPlanB() ? 'b' : ''}#${i}`;
+  protected readonly steps = computed<Step[]>(() => this.day().steps);
+  protected readonly stepKey = (i: number) => `${this.dayId()}#${i}`;
 
   protected readonly routeLink = computed(() => {
     const d = this.day();
-    if (this.showPlanB()) {
-      return routeUrl(d.planB!.steps.filter((s) => s.place).map((s) => s.place!), 'transit');
-    }
     return d.route ? routeUrl(d.route, d.travelMode) : null;
   });
 

@@ -1,8 +1,21 @@
 <section class="section-head">
   <h2>Dónde comer</h2>
   <p class="lead">
-    Sobre todo trattorias auténticas y baratas, dos de gama media que merecen la pena y una cena especial opcional.
+    Trattorias auténticas y baratas, unas pocas de gama media que merecen la pena y la cena especial.
   </p>
+  <div class="segmented" role="group" aria-label="Vista">
+    <button type="button" [class.on]="view() === 'lista'" (click)="view.set('lista')">☰ Lista</button>
+    <button type="button" [class.on]="view() === 'mapa'" (click)="view.set('mapa')">🗺️ Mapa</button>
+    <button type="button" class="near-btn" [class.on]="!!me()" (click)="locate()" [disabled]="locating()">
+      {{ locating() ? 'Buscando…' : me() ? '📍 Actualizar' : '📍 Cerca de mí' }}
+    </button>
+  </div>
+  @if (geoError()) {
+    <p class="warn-box">{{ geoError() }}</p>
+  }
+  @if (me()) {
+    <p class="muted">Ordenados del más cercano al más lejano.</p>
+  }
   <div class="chips" role="group" aria-label="Filtro">
     @for (f of filters; track f.id) {
       <button type="button" class="chip" [class.active]="filter() === f.id" (click)="filter.set(f.id)">
@@ -12,12 +25,22 @@
   </div>
 </section>
 
+@if (view() === 'mapa') {
+  <app-food-map [points]="points()" [me]="me()" (selected)="onPin($event)" />
+  <p class="muted map-legend">🍝 Para comer · ★ Los que más merecen la pena · ☕ Cafés y helados · 🔵 Vosotros</p>
+}
+
 @for (r of list(); track r.name) {
-  <article class="card food" [class.special]="r.tag === 'especial'">
+  <article class="card food" [class.special]="r.tag === 'especial'" [class.hl]="highlight() === r.name">
     <header class="food-head">
       <div>
         <h3>{{ r.name }}</h3>
-        <p class="muted">{{ r.kind }} · {{ r.zone }}</p>
+        <p class="muted">
+          {{ r.kind }} · {{ r.zone }}
+          @if (me()) {
+            · <strong>{{ away(r) }}</strong>
+          }
+        </p>
       </div>
       <span class="price-tag">{{ r.price }}</span>
     </header>
@@ -38,8 +61,8 @@
     <p>{{ r.why }}</p>
     <p class="order"><strong>Pedid:</strong> {{ r.order }}</p>
     <div class="step-actions">
-      <a class="pill" [href]="photos(r.name, r.zone)" target="_blank" rel="noopener">📷 Fotos ↗</a>
-      <a class="pill link" [href]="maps(r.name, r.zone)" target="_blank" rel="noopener">📍 Mapa</a>
+      <a class="pill" [href]="photos(r.name)" target="_blank" rel="noopener">📷 Fotos ↗</a>
+      <a class="pill link" [href]="maps(r.name)" target="_blank" rel="noopener">📍 Mapa</a>
     </div>
   </article>
 }
@@ -47,10 +70,15 @@
 <h3 class="group-title">☕ Cafés y helados</h3>
 <div class="card">
   <ul class="plain">
-    @for (s of sweets; track s.name) {
-      <li>
-        <a [href]="maps(s.name, s.zone)" target="_blank" rel="noopener">{{ s.name }}</a>
-        <span class="muted"> · {{ s.what }} ({{ s.zone }})</span>
+    @for (s of sweets(); track s.name) {
+      <li [class.hl]="highlight() === s.name">
+        <a [href]="maps(s.name)" target="_blank" rel="noopener">{{ s.name }}</a>
+        <span class="muted">
+          · {{ s.what }} ({{ s.zone }})
+          @if (me()) {
+            · <strong>{{ away(s) }}</strong>
+          }
+        </span>
       </li>
     }
   </ul>
