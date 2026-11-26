@@ -7,7 +7,8 @@ import { routeUrl, searchUrl } from './core/maps';
 import { TripState } from './core/trip-state';
 import { PHOTOS } from './data/photos.generated';
 import { AUDIO } from './data/audio';
-import { splitSentences } from './core/audio-player';
+import { sentenceAt, splitSentences } from './core/audio-player';
+import { AUDIO_TRACKS } from './data/audio.generated';
 import { RESTAURANTS, SWEETS } from './data/food';
 import { distance } from './food/food';
 
@@ -168,6 +169,23 @@ describe('Audioguías, mapa y plan sin Pompeya', () => {
 
   it('divide el texto en frases', () => {
     expect(splitSentences('Hola. ¿Qué tal? Bien… y tú')).toEqual(['Hola.', '¿Qué tal?', 'Bien…', 'y tú']);
+  });
+
+  it('cada capítulo tiene su MP3 con el inicio de cada frase', () => {
+    for (const [place, g] of Object.entries(AUDIO)) {
+      const tracks = AUDIO_TRACKS[place];
+      expect(tracks?.length, place).toBe(g.chapters.length);
+      g.chapters.forEach((c, i) => {
+        expect(tracks[i].starts.length, `${place} ${i}`).toBe(splitSentences(c.text).length);
+        expect(tracks[i].duration).toBeGreaterThan(tracks[i].starts.at(-1)!);
+      });
+    }
+  });
+
+  it('sabe qué frase suena en cada segundo', () => {
+    expect(sentenceAt([1, 4, 9], 0)).toBe(0);
+    expect(sentenceAt([1, 4, 9], 5)).toBe(1);
+    expect(sentenceAt([1, 4, 9], 30)).toBe(2);
   });
 
   it('ya no hay nada de Pompeya ni Nápoles', () => {

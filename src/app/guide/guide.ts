@@ -4,6 +4,7 @@ import { TripState } from '../core/trip-state';
 import { AudioPlayer } from '../core/audio-player';
 import { AUDIO } from '../data/audio';
 import { DAYS } from '../data/days';
+import { AUDIO_MB } from '../data/audio.generated';
 
 @Component({
   selector: 'app-guide',
@@ -15,6 +16,11 @@ export class Guide {
   protected readonly sections = GUIDE;
   protected readonly phrases = PHRASES;
   protected readonly audio = inject(AudioPlayer);
+  protected readonly sizeMb = AUDIO_MB;
+
+  constructor() {
+    void this.audio.countOffline();
+  }
 
   /** Audioguías agrupadas por día, sin repetir. */
   protected readonly audioByDay = (() => {

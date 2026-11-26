@@ -10,8 +10,8 @@
         <button type="button" class="icon-btn" (click)="player.expanded.set(false)" aria-label="Minimizar">⌄</button>
       </header>
 
-      @if (!player.supported) {
-        <p class="warn-box">Este navegador no puede leer en voz alta. Podéis leer el texto aquí abajo.</p>
+      @if (player.error()) {
+        <p class="warn-box">{{ player.error() }}</p>
       }
 
       <ol class="chapters">
@@ -44,7 +44,7 @@
       <footer class="controls">
         <button type="button" class="icon-btn" (click)="player.prev()" aria-label="Capítulo anterior">⏮</button>
         <button type="button" class="play-btn" (click)="player.toggle()" [attr.aria-label]="player.playing() ? 'Pausa' : 'Reproducir'">
-          {{ player.playing() ? '❚❚' : '▶' }}
+          {{ player.loading() ? '…' : player.playing() ? '❚❚' : '▶' }}
         </button>
         <button type="button" class="icon-btn" (click)="player.next()" aria-label="Capítulo siguiente">⏭</button>
         <div class="rates" role="group" aria-label="Velocidad">
@@ -53,7 +53,7 @@
           }
         </div>
       </footer>
-      <p class="muted sheet-note">Usa la voz del móvil: funciona sin conexión. La pantalla no se apaga mientras suena.</p>
+      <p class="muted sheet-note">Suena aunque el móvil esté en silencio. Una vez escuchada queda guardada para usarla sin conexión.</p>
     </section>
   } @else {
     <div class="mini-player">

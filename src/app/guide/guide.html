@@ -54,7 +54,18 @@
 
 <details class="card fold">
   <summary><h3>🎧 Audioguías</h3></summary>
-  <p class="muted">Con la voz del móvil y sin conexión. Podéis escucharlas también antes del viaje.</p>
+  <p class="muted">Grabadas en MP3: suenan aunque el móvil esté en silencio. Para usarlas sin datos, descargadlas antes con wifi.</p>
+  <p class="offline-row">
+    <button type="button" class="btn small" (click)="audio.downloadAll()" [disabled]="audio.offlineBusy() || audio.offlineDone() >= audio.offlineTotal">
+      @if (audio.offlineDone() >= audio.offlineTotal) {
+        ✓ Guardadas sin conexión
+      } @else if (audio.offlineBusy()) {
+        Descargando {{ audio.offlineDone() }}/{{ audio.offlineTotal }}…
+      } @else {
+        ⬇ Descargar todas (~{{ sizeMb }} MB)
+      }
+    </button>
+  </p>
   @for (d of audioByDay; track d.day) {
     <p class="audio-day">{{ d.day }}</p>
     <ul class="audio-list">
