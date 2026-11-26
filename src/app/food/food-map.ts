@@ -40,7 +40,9 @@ export class FoodMap {
 
   constructor() {
     afterNextRender(async () => {
-      const lib = await import('leaflet');
+      // Leaflet es CommonJS: en producción el build lo expone en `default`, en desarrollo no.
+      const mod = (await import('leaflet')) as typeof L & { default?: typeof L };
+      const lib = mod.default ?? mod;
       this.lib = lib;
       this.map = lib
         .map(this.el().nativeElement, { zoomControl: true, attributionControl: true })
